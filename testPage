@@ -1,1 +1,22 @@
-^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^-]+(?:\\.[a-zA-Z0-9_!#$%&’*+/=?`{|}~^-]+)*@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$
+Implement Authorization in Spring Boot Application
+
+1. Add spring boot security plugin to the pom.xml
+	<groupId>org.springframework.boot</groupId>
+	<artifactId>spring-boot-starter-security</artifactId>
+	
+2. org.springframework.security.access.PermissionEvaluator has to be implemented to define access to roles
+
+3. org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+		-> This class should be extended and configureGlobal(AuthenticationManagerBuilder auth) should be overridden to check if the user has access
+		-> configure() method will have to be overridden to ensure authentication and authorization:
+				http.authorizeRequests() 
+				.anyRequest().authenticated() 
+				.and().requestCache().requestCache(new NullRequestCache()) 
+				.and().httpBasic() 
+				.and().csrf().disable();
+
+4. The WebSecurity class will have to be annottated with the following annotattions:
+		-> @EnableWebSecurity
+		-> @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
+		
+5. The controller classes will be annottated with @Secured annotation. This will ensure that that user request will be checked for 
